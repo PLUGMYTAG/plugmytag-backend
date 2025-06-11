@@ -52,9 +52,9 @@ app.post("/generate", async (req, res) => {
             fs.unlinkSync(outputPath);
         });
     } catch (err) {
-        console.error(err);
-        res.status(500).send("Voice generation or processing failed.");
-    }
+    console.error("FULL ERROR:", err.response?.data || err.message || err)
+    res.status(500).send("Voice generation or processing failed.")
+}
 });
 
 app.listen(port, () => {
