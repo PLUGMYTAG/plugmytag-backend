@@ -12,7 +12,7 @@ const port = process.env.PORT || 3000;
 
 app.use(bodyParser.json());
 
-app.post("/generate-tag", async (req, res) => {
+app.post("/generate", async (req, res) => {
     const { text } = req.body;
     if (!text) return res.status(400).send("Missing text");
 
