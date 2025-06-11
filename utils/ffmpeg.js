@@ -1,23 +1,26 @@
+// utils/ffmpeg.js
 const { exec } = require("child_process")
 
 function applyEffects(inputPath, outputPath) {
   return new Promise((resolve, reject) => {
-    // Alle effecten gecombineerd:
+    // Super-charged effecten:
     const filters = [
-      // echo
-      "aecho=0.8:0.9:1000:0.3",
-      // extra echo als reverb
-      "aecho=0.8:0.9:1000|500:0.5|0.3",
-      // stutter
-      "adelay=150|150,areverse,adelay=150|150,areverse",
-      // distortion / bitcrusher
-      "acrusher=bits=4:mix=1",
-      // pitch shift (–10%)
-      "asetrate=44100*0.9,aresample=44100"
+      // 1) Sterke echo voor diepte
+      "aecho=0.9:0.9:1000:0.5",
+      // 2) Kortere, scherpere reverb (extra echo)
+      "aecho=0.6:0.8:200:0.4",
+      // 3) Duidelijke “stutter” stottering
+      "adelay=200|200,areverse,adelay=200|200,areverse",
+      // 4) Heftige distortion / bitcrusher
+      "acrusher=bits=2:mix=1",
+      // 5) Duidelijke pitch shift (–15%)
+      "asetrate=44100*0.85,aresample=44100"
     ].join(",")
 
-    const cmd = `ffmpeg -y -i "${inputPath}" -af "${filters}" "${outputPath}"`
+    const cmd =
+      `ffmpeg -y -i "${inputPath}" -af "${filters}" "${outputPath}"`
     console.log("🔊 Running ffmpeg:", cmd)
+
     exec(cmd, (err, stdout, stderr) => {
       if (err) {
         console.error("❌ FFmpeg failed:", stderr)
