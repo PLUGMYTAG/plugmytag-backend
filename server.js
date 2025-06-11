@@ -1,4 +1,3 @@
-
 const express = require("express");
 const bodyParser = require("body-parser");
 const axios = require("axios");
@@ -45,9 +44,9 @@ app.post("/generate", async (req, res) => {
         const outputPath = `./output_${Date.now()}.mp3`;
 
         fs.writeFileSync(inputPath, response.data);
-
         await applyEffects(inputPath, outputPath);
 
+        res.setHeader('Content-Type', 'audio/mpeg');
         res.download(outputPath, () => {
             fs.unlinkSync(inputPath);
             fs.unlinkSync(outputPath);
