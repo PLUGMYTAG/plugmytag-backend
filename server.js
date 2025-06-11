@@ -5,6 +5,8 @@ const fs = require("fs");
 const { exec } = require("child_process");
 const { applyEffects } = require("./utils/ffmpeg");
 require("dotenv").config();
+const cors = require("cors")
+app.use(cors())
 
 const app = express();
 const port = process.env.PORT || 3000;
