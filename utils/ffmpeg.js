@@ -2,17 +2,33 @@ const { exec } = require("child_process")
 
 function applyEffects(inputPath, outputPath) {
   return new Promise((resolve, reject) => {
+    // op 130 BPM:
+    const quarter = Math.round(60000 / 130) // ≈461 ms
+    const half    = quarter * 2            // ≈922 ms
+    const whole   = quarter * 4            // ≈1844 ms
+
+    // semitone shift (5 halve tonen omhoog)
+    const semitones  = 5
+    const pitchFactor = Math.pow(2, semitones / 12)
+
     const filters = [
-      // 1) Slapback echo (2 delays + 2 decays)
-      "aecho=0.8:0.9:100|200:0.4|0.4",
-      // 2) Extra reverb
-      "aecho=0.6:0.8:500:0.3",              
-      // 3) Stutter/glitch
-      "adelay=150|150,areverse,adelay=150|150,areverse",
-      // 4) Heftige distortion
+      // 0) Compression
+      "acompressor=threshold=0.3:ratio=6:attack=5:release=50",
+
+      // 1) Slapback echo met langere delays
+      `aecho=0.8:0.9:${half}|${whole}:0.4|0.4`,
+
+      // 2) Rijke reverb
+      "afir=reverb=50|50|20|0.7",
+
+      // 3) Stutter/glitch op halve noten
+      `adelay=${half}|${half},areverse,adelay=${half}|${half},areverse`,
+
+      // 4) Vette distortion
       "acrusher=bits=3:mix=1",
-      // 5) Pitch drop (–15%)
-      "asetrate=44100*0.85,aresample=44100"
+
+      // 5) Pitch shift (transponeer +5 halve tonen)
+      `asetrate=44100*${pitchFactor},aresample=44100`
     ].join(",")
 
     const cmd = `ffmpeg -y -i "${inputPath}" -af "${filters}" "${outputPath}"`
