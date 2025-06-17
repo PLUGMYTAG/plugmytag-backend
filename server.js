@@ -49,7 +49,7 @@ app.post("/generate", async (req, res) => {
 
 app.listen(port, () => console.log(`✅ Server running on port ${port}`))
 
-const { generatePack } = require("../utils/generatePack");
+const { generatePack } = require("./utils/generatePack");
 
 app.post("/generate-pack", async (req, res) => {
   try {
