@@ -2,10 +2,10 @@
   "name": "plugmytag-backend",
   "version": "1.0.0",
   "description": "Voice tag generator backend with ElevenLabs + ffmpeg effects",
-  "main": "server.js",
-  "scripts": {
-    "start": "node server.js"
-  },
+  "main": "src/server.js",
+"scripts": {
+  "start": "node src/server.js"
+},
   "dependencies": {
     "axios": "^1.6.0",
     "body-parser": "^1.20.2",
