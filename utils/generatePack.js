@@ -1,6 +1,5 @@
 const fs = require("fs");
 const path = require("path");
-const fetch = require("node-fetch");
 const archiver = require("archiver");
 const nodemailer = require("nodemailer");
 const { getRandomTagText } = require("./getRandomTagText");
