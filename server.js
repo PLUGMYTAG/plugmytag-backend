@@ -48,3 +48,27 @@ app.post("/generate", async (req, res) => {
 })
 
 app.listen(port, () => console.log(`✅ Server running on port ${port}`))
+
+const { generatePack } = require("./utils/generatePack");
+
+app.post("/generate-pack", async (req, res) => {
+  try {
+    const { producer_name, email, amount } = req.body;
+
+    if (!producer_name || !email || !amount) {
+      return res.status(400).json({ error: "Missing fields" });
+    }
+
+    await generatePack(
+      producer_name,
+      email,
+      parseInt(amount, 10),
+      process.env.ELEVEN_API_KEY
+    );
+
+    res.json({ success: true, message: "Voice tag pack is being generated and will be emailed." });
+  } catch (err) {
+    console.error("❌ Error in /generate-pack:", err);
+    res.status(500).json({ error: "Failed to generate or send pack." });
+  }
+});
