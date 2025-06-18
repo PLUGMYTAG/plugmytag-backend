@@ -12,24 +12,16 @@ function applyEffects(inputPath, outputPath) {
     const pitchFactor = Math.pow(2, semitones / 12)
 
     const filters = [
-      // 0) Compression
-      "acompressor=threshold=0.3:ratio=6:attack=5:release=50",
+  // Slapback echo op 130 BPM (one‐beat=462 ms, two‐beat=924 ms):
+  "aecho=0.8:0.9:462|924:0.5|0.3",
+  // eenvoudige reverb met tweede echo (lange, zwakkere echo):
+  "aecho=0.6:0.7:1800|3600:0.2|0.2",
+  // compressie vlakknijpen van dynamiek
+  "acompressor=threshold=-20dB:ratio=4:attack=10:release=200",
+  // pitch shift (±1 semitoon omhoog, C→C#; pas factor aan voor andere intervallen)
+  "asetrate=44100*1.05946,aresample=44100"
+].join(",");
 
-      // 1) Slapback echo met langere delays
-      `aecho=0.8:0.9:${half}|${whole}:0.4|0.4`,
-
-      // 2) Rijke reverb
-      "afir=reverb=50|50|20|0.7",
-
-      // 3) Stutter/glitch op halve noten
-      `adelay=${half}|${half},areverse,adelay=${half}|${half},areverse`,
-
-      // 4) Vette distortion
-      "acrusher=bits=3:mix=1",
-
-      // 5) Pitch shift (transponeer +5 halve tonen)
-      `asetrate=44100*${pitchFactor},aresample=44100`
-    ].join(",")
 
     const cmd = `ffmpeg -y -i "${inputPath}" -af "${filters}" "${outputPath}"`
     console.log("🔊 Running ffmpeg:", cmd)
