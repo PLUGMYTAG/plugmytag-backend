@@ -3,25 +3,23 @@ const { exec } = require("child_process")
 
 function applyEffects(inputPath, outputPath) {
   return new Promise((resolve, reject) => {
-    // 130 BPM-klokken:
-    const quarter = Math.round(60000 / 130)      // ≈462 ms
-    const half    = quarter * 2                   // ≈924 ms
-    const whole   = quarter * 4                   // ≈1848 ms
+    // 130 BPM → kwartnoot ≈462 ms, halve noot ≈924 ms, hele noot ≈1848 ms
+    const quarter = Math.round(60000 / 130)
+    const half    = quarter * 2
+    const whole   = quarter * 4
 
-    // +5 halve tonen (factor ≈1.33484)
+    // +5 halve tonen → pitch‐factor ≈1.33484
     const semitones  = 5
     const pitchFactor = Math.pow(2, semitones/12)
 
     const filters = [
-      // 1) Slapback echoes
+      // 1) Slap-back echo
       `aecho=0.8:0.9:${quarter}|${half}:0.5|0.3`,
-      // 2) Extra “reverb” simulatie met echo
-      `aecho=0.6:0.7:${whole}|${whole*2}:0.3|0.2`,
-      // 3) Compressie
+      // 2) Compressie
       "acompressor=threshold=-20dB:ratio=4:attack=10:release=200",
-      // 4) Distortion
+      // 3) Distortion
       "acrusher=bits=3:mix=1",
-      // 5) Pitch-shift
+      // 4) Pitch-shift
       `asetrate=44100*${pitchFactor.toFixed(5)},aresample=44100`
     ].join(",")
 
