@@ -1,9 +1,10 @@
+const fetch = require("node-fetch");
 const fs = require("fs");
 const path = require("path");
 const archiver = require("archiver");
 const nodemailer = require("nodemailer");
 const { getRandomTagText } = require("./getRandomTagText");
-const voices = require("./plugmytag_10_tag_test_config.json");
+const voices = require("./data/plugmytag_10_tag_test_config.json");
 
 async function generateVoiceTag(text, voiceId, outputPath, apiKey) {
   const res = await fetch(`https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`, {

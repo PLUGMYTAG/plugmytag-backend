@@ -1,19 +1,13 @@
-const tagVariations = [
-  "{name} on the beat!",
-  "{name} made this beat!",
-  "This one's tagged by {name}.",
-  "You're now listening to {name}.",
-  "{name} just dropped this.",
-  "It's a {name} exclusive.",
-  "{name} in the mix.",
-  "Powered by PlugMyTag – {name}.",
-  "This beat is owned by {name}.",
-  "You’re locked in with {name}."
+// getRandomTagText.js
+const templates = [
+  "This is a tag for >PRODUCER<",
+  "Yo, it's >PRODUCER< in the building",
+  // … vul aan …
 ];
 
 function getRandomTagText(producerName) {
-  const pick = tagVariations[Math.floor(Math.random() * tagVariations.length)];
-  return pick.replace("{name}", producerName);
+  const tpl = templates[Math.floor(Math.random() * templates.length)];
+  return tpl.replace(/>PRODUCER</g, producerName);
 }
 
 module.exports = { getRandomTagText };
