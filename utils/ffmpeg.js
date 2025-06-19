@@ -1,47 +1,28 @@
-const { exec } = require("child_process")
+// ffmpeg.js
+const { exec } = require("child_process");
 
 function applyEffects(inputPath, outputPath) {
   return new Promise((resolve, reject) => {
-    // op 130 BPM:
-    const quarter = Math.round(60000 / 130) // ≈461 ms
-    const half    = quarter * 2            // ≈922 ms
-    const whole   = quarter * 4            // ≈1844 ms
-
-    // semitone shift (5 halve tonen omhoog)
-    const semitones  = 5
-    const pitchFactor = Math.pow(2, semitones / 12)
-
     const filters = [
-      // 0) Compression
-      "acompressor=threshold=0.3:ratio=6:attack=5:release=50",
+      // 1) Slapback echo
+      "aecho=0.8:0.9:100|200:0.3|0.3",
+      // 2) Compressie
+      "acompressor=threshold=-20dB:ratio=3:attack=10:release=200",
+      // 3) Pitch shift (geen verandering = factor 1.0)
+      "asetrate=44100*1.0,aresample=44100"
+    ].join(",");
 
-      // 1) Slapback echo met langere delays
-      `aecho=0.8:0.9:${half}|${whole}:0.4|0.4`,
-
-      // 2) Rijke reverb
-      "afir=reverb=50|50|20|0.7",
-
-      // 3) Stutter/glitch op halve noten
-      `adelay=${half}|${half},areverse,adelay=${half}|${half},areverse`,
-
-      // 4) Vette distortion
-      "acrusher=bits=3:mix=1",
-
-      // 5) Pitch shift (transponeer +5 halve tonen)
-      `asetrate=44100*${pitchFactor},aresample=44100`
-    ].join(",")
-
-    const cmd = `ffmpeg -y -i "${inputPath}" -af "${filters}" "${outputPath}"`
-    console.log("🔊 Running ffmpeg:", cmd)
+    const cmd = `ffmpeg -y -i "${inputPath}" -af "${filters}" "${outputPath}"`;
+    console.log("🔊 Running ffmpeg:", cmd);
 
     exec(cmd, (err, _stdout, stderr) => {
       if (err) {
-        console.error("❌ FFmpeg failed:", stderr)
-        return reject(err)
+        console.error("❌ FFmpeg failed:", stderr);
+        return reject(err);
       }
-      resolve()
-    })
-  })
+      resolve();
+    });
+  });
 }
 
-module.exports = { applyEffects }
+module.exports = { applyEffects };

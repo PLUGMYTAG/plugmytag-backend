@@ -3,7 +3,7 @@ const bodyParser = require("body-parser")
 const cors = require("cors")
 const axios = require("axios")
 const fs = require("fs")
-const { applyEffects } = require("./utils/ffmpeg")
+const { applyEffects } = require("./ffmpeg")
 require("dotenv").config()
 
 const app = express()
