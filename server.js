@@ -1,7 +1,7 @@
 const express = require("express")
 const cors = require("cors")
 const fs = require("fs-extra")
-const axios = require("./ignore.gitignore/node_modules/axios/index.d.cts")
+const axios = require('axios')
 const archiver = require("archiver")
 const { exec } = require("child_process")
 const path = require("path")
