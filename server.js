@@ -1,7 +1,7 @@
 const express = require("express")
 const cors = require("cors")
 const fs = require("fs-extra")
-const axios = require("axios")
+const axios = require("./ignore.gitignore/node_modules/axios/index.d.cts")
 const archiver = require("archiver")
 const { exec } = require("child_process")
 const path = require("path")
@@ -10,7 +10,7 @@ const app = express()
 app.use(cors())
 app.use(express.json())
 
-const ELEVEN_API_KEY = "sk_812109ba869f0e15e0caf8edb3d9ea21f9ca1d0d6bb36b43I_KEY" // <-- VERVANG met je echte key
+const ELEVEN_API_KEY = "sk_3dac651233b8c4b10782891640857d112b17ea0677652f14" // <-- VERVANG met je echte key
 
 const voiceIds = [
   "c8PX8tI3Cx46TLRopRq8",
