@@ -62,6 +62,7 @@ app.post("/generate-tags", async (req, res) => {
 
     // 1. Generate audio via ElevenLabs
     try {
+      console.log(`▶️ Generating tag ${i + 1} with voice ID: ${voiceId}`)
       const response = await axios.post(
         `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`,
         {
@@ -84,10 +85,12 @@ app.post("/generate-tags", async (req, res) => {
         writer.on("finish", resolve)
         writer.on("error", reject)
       })
-    } catch (err) {
-      console.error("ElevenLabs error:", err)
-      return res.status(500).json({ error: "Failed to generate tag." })
-    }
+} catch (err) {
+  console.error(`❌ ElevenLabs error at voice ID: ${voiceId}`)
+  console.error(err.response?.data || err.message)
+  console.warn(`⚠️ Skipping voice ID: ${voiceId} due to error.`)
+  continue // Ga door naar de volgende voice ID
+}
 
     // 2. Add FX with ffmpeg
     const fxCmd = `ffmpeg -y -i ${rawPath} -af "areverse,aecho=0.8:0.88:60:0.4,areverse,aecho=0.8:0.9:1000:0.3,loudnorm=I=-16:TP=-1.5:LRA=11,chorus=0.6:0.9:55:0.4:0.25:2,flanger,equalizer=f=200:t=h:width=2:g=-15,equalizer=f=3000:t=h:width=2:g=4" ${fxPath}`
