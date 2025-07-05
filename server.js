@@ -81,62 +81,58 @@ app.post("/generate-tags", async (req, res) => {
   await fs.ensureDir(tempDir)
   const filePaths = []
 
-  for (let i = 0; i < amount; i++) {
-    const voiceId = voiceIds[i % voiceIds.length]
-    const rawPath = path.join(tempDir, `tag_raw_${i + 1}.mp3`)
-    const fxPath = path.join(tempDir, `tag_${i + 1}.mp3`)
+  let i = 0;
+let successfulTags = 0;
 
-    // 1. Generate audio via ElevenLabs
-    try {
-      console.log(`▶️ Generating tag ${i + 1} with voice ID: ${voiceId}`)
-      const response = await axios.post(
-        `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`,
-        {
-          text: producerName,
-          model_id: "eleven_multilingual_v2",
-          voice_settings: { stability: 0.7, similarity_boost: 0.7 },
+while (successfulTags < amount) {
+  const voiceId = voiceIds[i % voiceIds.length];
+  const rawPath = path.join(tempDir, `tag_raw_${successfulTags + 1}.mp3`);
+  const fxPath = path.join(tempDir, `tag_${successfulTags + 1}.mp3`);
+
+  try {
+    console.log(`▶️ Generating tag ${successfulTags + 1} with voice ID: ${voiceId}`);
+    const response = await axios.post(
+      `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`,
+      {
+        text: producerName,
+        model_id: "eleven_multilingual_v2",
+        voice_settings: { stability: 0.7, similarity_boost: 0.7 },
+      },
+      {
+        headers: {
+          "xi-api-key": ELEVEN_API_KEY,
+          "Content-Type": "application/json",
         },
-        {
-          headers: {
-            "xi-api-key": ELEVEN_API_KEY,
-            "Content-Type": "application/json",
-          },
-          responseType: "stream",
-        }
-      )
+        responseType: "stream",
+      }
+    );
 
-      const writer = fs.createWriteStream(rawPath)
-      await new Promise((resolve, reject) => {
-        response.data.pipe(writer)
-        writer.on("finish", resolve)
-        writer.on("error", reject)
-      })
-} catch (err) {
-  console.error(`❌ ElevenLabs error at voice ID: ${voiceId}`)
-  console.error(err.response?.data || err.message)
-  console.warn(`⚠️ Skipping voice ID: ${voiceId} due to error.`)
-  continue // Ga door naar de volgende voice ID
-}
+    const writer = fs.createWriteStream(rawPath);
+    await new Promise((resolve, reject) => {
+      response.data.pipe(writer);
+      writer.on("finish", resolve);
+      writer.on("error", reject);
+    });
 
-    // 2. Add FX with ffmpeg
-    const fxCmd = `ffmpeg -y -i ${rawPath} -af "areverse,aecho=0.8:0.88:60:0.4,areverse,aecho=0.8:0.9:1000:0.3,loudnorm=I=-16:TP=-1.5:LRA=11,chorus=0.6:0.9:55:0.4:0.25:2,flanger,equalizer=f=200:t=h:width=2:g=-15,equalizer=f=3000:t=h:width=2:g=4" ${fxPath}`
+    const fxCmd = `ffmpeg -y -i ${rawPath} -af "areverse,aecho=0.8:0.88:60:0.4,areverse,aecho=0.8:0.9:1000:0.3,loudnorm=I=-16:TP=-1.5:LRA=11,chorus=0.6:0.9:55:0.4:0.25:2,flanger,equalizer=f=200:t=h:width=2:g=-15,equalizer=f=3000:t=h:width=2:g=4" ${fxPath}`;
 
-    try {
-      await new Promise((resolve, reject) => {
-        exec(fxCmd, (err) => {
-          if (err) reject(err)
-          else resolve()
-        })
-      })
-    } catch (err) {
-  console.error("❌ FFmpeg error:", err)
-  console.warn(`⚠️ Skipping tag ${i + 1} due to FX error.`)
-  continue
-}
+    await new Promise((resolve, reject) => {
+      exec(fxCmd, (err) => {
+        if (err) reject(err);
+        else resolve();
+      });
+    });
 
-    filePaths.push(fxPath)
-    await delay(2000); // wacht 2000ms tussen elke tag generatie
+    filePaths.push(fxPath);
+    successfulTags++;
+  } catch (err) {
+    console.error(`❌ Error at voice ID ${voiceId}:`, err.response?.data || err.message);
+    console.warn(`⚠️ Skipping voice ID: ${voiceId}`);
   }
+
+  i++;
+  await delay(1500); // wacht tussen requests
+}
 
   // 3. Zip all FX files
   const zipPath = path.join(tempDir, `${producerName}_tags.zip`)
