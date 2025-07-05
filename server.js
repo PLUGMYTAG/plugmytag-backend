@@ -41,7 +41,26 @@ const voiceIds = [
   "sAGnm3Te7Q3LVVENtdZG",
   "V33LkP9pVLdcjeB2y5Na",
   "nDJIICjR9zfJExIFeSCN",
-  "pBZVCk298iJlHAcHQwLr"
+  "pBZVCk298iJlHAcHQwLr",
+  "sScFwemjGrAkDDiTXWMH",
+  "pjcYQlDFKMbcOUp6F5GD",
+  "hbB2qXyS2GMyyZIZyhAH",
+  "TC0Zp7WVFzhA8zpTlRqV",
+  "51YRucvcq5ojp2byev44",
+  "L4ndSW2PzthljqHuvso3",
+  "Dslrhjl3ZpzrctukrQSN",
+  "z3kTTwYbQrmL7ckdGcJi",
+  "Hjzqw9NR0xFMYU9Us0DL",
+  "KLZOWyG48RjZkAAjuM89",
+  "zGWLOENwXfL8saHn84KL",
+  "WxqqAhUiswIRQNTBz2a5",
+  "SpujdQyiKXTCe05mAnq6",
+  "BlgEcC0TfWpBak7FmvHW",
+  "ZF6FPAbjXT4488VcRRnw",
+  "876MHA6EtWKaHTEGzjy5",
+  "8RwERzS73M5BcreQgmi6",
+  "KmnvDXRA0HU55Q0aqkPG",
+  "Ix8C14HEHgIQkJswik2o"
 ];
 
 app.post("/generate-tags", async (req, res) => {
