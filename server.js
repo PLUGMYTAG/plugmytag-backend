@@ -66,6 +66,10 @@ const voiceIds = [
   "IoYPiP0wwoQzmraBbiju"
 ];
 
+function delay(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 app.post("/generate-tags", async (req, res) => {
   const { producerName, amount } = req.body
 
@@ -131,6 +135,7 @@ app.post("/generate-tags", async (req, res) => {
 }
 
     filePaths.push(fxPath)
+    await delay(150); // wacht 150ms tussen elke tag generatie
   }
 
   // 3. Zip all FX files
