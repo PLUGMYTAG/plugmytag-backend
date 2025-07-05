@@ -125,9 +125,10 @@ app.post("/generate-tags", async (req, res) => {
         })
       })
     } catch (err) {
-      console.error("FFmpeg error:", err)
-      return res.status(500).json({ error: "Failed to apply FX." })
-    }
+  console.error("❌ FFmpeg error:", err)
+  console.warn(`⚠️ Skipping tag ${i + 1} due to FX error.`)
+  continue
+}
 
     filePaths.push(fxPath)
   }
