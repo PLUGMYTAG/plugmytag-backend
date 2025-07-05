@@ -135,7 +135,7 @@ app.post("/generate-tags", async (req, res) => {
 }
 
     filePaths.push(fxPath)
-    await delay(150); // wacht 150ms tussen elke tag generatie
+    await delay(2000); // wacht 2000ms tussen elke tag generatie
   }
 
   // 3. Zip all FX files
