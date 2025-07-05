@@ -60,7 +60,10 @@ const voiceIds = [
   "876MHA6EtWKaHTEGzjy5",
   "8RwERzS73M5BcreQgmi6",
   "KmnvDXRA0HU55Q0aqkPG",
-  "Ix8C14HEHgIQkJswik2o"
+  "Ix8C14HEHgIQkJswik2o",
+  "ucgJ8SdlW1CZr9MIm8BP",
+  "st7NwhTPEzqo2riw7qWC",
+  "IoYPiP0wwoQzmraBbiju"
 ];
 
 app.post("/generate-tags", async (req, res) => {
