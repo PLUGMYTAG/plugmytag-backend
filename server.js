@@ -36,7 +36,7 @@ const voiceIds = [
   "cENJycK4Wg62xVikqkaA",
   "WZlYpi1yf6zJhNWXih74",
   "HWvDv2YkmE8rnsWesuos",
-  "thfYL0Elyru2qqTtNQsE",
+  "FGY2WhTYpPnrIDTdsKH5",
   "geVuXdUpU0lgUukWJCUE",
   "sAGnm3Te7Q3LVVENtdZG",
   "V33LkP9pVLdcjeB2y5Na",
