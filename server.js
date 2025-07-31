@@ -148,6 +148,19 @@ while (successfulTags < amount) {
       await fs.remove(tempDir)
     })
   })
+  const { sendTikTokPurchaseEvent } = require('./utils/tiktok');
+
+app.post('/tiktok-track-purchase', async (req, res) => {
+  const { email, value, packName, orderId } = req.body;
+
+  try {
+    await sendTikTokPurchaseEvent({ email, value, packName, orderId });
+    res.status(200).json({ success: true });
+  } catch (err) {
+    console.error('TikTok event error:', err.response?.data || err.message);
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
 })
 
 // ✅ Start server
